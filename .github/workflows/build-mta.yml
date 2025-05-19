@@ -27,6 +27,15 @@ jobs:
     #  run: npm config set package-lock false
     - name: Build MTA
       run: mbt build -t gen -p cf
+    - name: Upload
+      uses: actions/upload-artifact@v4
+      with: 
+        # Name of the artifact to upload.
+        # Optional. Default is 'artifact'
+        name: mta.mtar
+        # A file, directory or wildcard pattern that describes what to upload
+        # Required.
+        path: ./gen/*.mtar
   deploy:
     needs: build
     runs-on: ubuntu-latest
