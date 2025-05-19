@@ -27,3 +27,11 @@ jobs:
     #  run: npm config set package-lock false
     - name: Build MTA
       run: mbt build -t gen -p cf
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Make the script files executable
+        run: chmod +x ./.github/workflows/scripts/btp_deploy.sh
+      - name: Run a script
+        run: ./.github/workflows/scripts/btp_deploy.sh
