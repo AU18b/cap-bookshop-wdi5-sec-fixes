@@ -35,7 +35,7 @@ jobs:
         with:
           name: mta.mtar
           path: 
-            ./gen/*.mtar
+            ./gen/**/*.mtar
             ./.github/workflows/scripts/* 
   deploy:
     needs: build
