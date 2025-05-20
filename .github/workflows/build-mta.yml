@@ -7,8 +7,8 @@ on:
   push:
     branches: [1084565-build-script]
   pull_request:
-    types: [opened, reopened]
-
+    branches: [ "main" ]
+    
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
