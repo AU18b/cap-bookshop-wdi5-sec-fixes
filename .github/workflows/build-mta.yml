@@ -34,8 +34,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mta.mtar
-          path: ./gen/*.mtar
-
+          path: 
+            ./gen/*.mtar
+            ./.github/workflows/scripts/* 
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -46,6 +47,6 @@ jobs:
           name: mta.mtar
           path: ./
       - name: Make the script files executable
-        run: pwd; ls -lah; chmod +x ./.github/workflows/scripts/btp_deploy.sh
+        run: pwd; ls -lah; chmod +x ./btp_deploy.sh
       - name: Run the deployment script
-        run: ./.github/workflows/scripts/btp_deploy.sh
+        run: ./btp_deploy.sh
