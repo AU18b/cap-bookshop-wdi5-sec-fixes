@@ -16,9 +16,9 @@ cf install-plugin multiapps -f
 cf install-plugin html5-plugin -f
 
 echo '############## Authorizations ##############'
-cf api $CF_API
-cf auth $CF_USER "$CF_PASS"
+cf api ${{ CF_API }}
+cf auth ${{ CF_USER }} "${{ CF_PASS }" 
 
 echo '############## Deploy ##############'
-cf target -o $CF_ORG -s $CF_SPACE
+cf target -o ${{ CF_ORG }} -s ${{ CF_SPACE }}
 cf deploy ./capire.bookshop_1.0.0.mtar -f
