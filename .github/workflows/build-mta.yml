@@ -1,0 +1,60 @@
+# Build Multitarget Application
+name: Build MTA
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [1084565-build-script]
+  pull_request:
+    branches: [ "main" ]
+    
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install MTA Build Tool (NPM)
+        run: npm install -g mbt
+      # Do not generate package-lock.json
+      # See https://blogs.sap.com/2020/07/07/escaping-eintegrity-hell/
+      #- name: Disable package-lock.json
+      #  run: npm config set package-lock false
+      - name: Build MTA
+        run: mbt build -t gen -p cf
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mta.mtar
+          path: gen/capire.bookshop_1.0.0.mtar 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: mta.mtar
+          path: ./
+      - name: Make the script files executable
+        run: pwd; ls -lah; chmod +x ./.github/workflows/scripts/btp_deploy.sh
+      - name: Run the deployment script
+        env:
+          CF_USER: ${{ secrets.CF_USER }}
+          CF_PASS: ${{ secrets.CF_PASS }}
+          CF_API: ${{vars.CF_API}}
+          CF_ORG: ${{vars.CF_ORG}}
+          CF_SPACE: ${{vars.CF_SPACE}}
+        run: ./.github/workflows/scripts/btp_deploy.sh

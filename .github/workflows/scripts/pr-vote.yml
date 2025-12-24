@@ -1,0 +1,24 @@
+name: Basic build and validate
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  call-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'   # Or any supported version you need
+
+      - name: Call API using Node.js script
+        env:
+          SERVICE_TOKEN: ${{ secrets.SERVICE_TOKEN }}
+          API_ENDPOINT: https://cicd-service.cfapps.ap10.hana.ondemand.com/v2/ # <-- Replace as needed
+        run: |
+          node call-api.js
